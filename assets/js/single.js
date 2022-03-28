@@ -1,4 +1,15 @@
 var issueContainerEl = document.getElementById("issue-container");
+var limitWarningEl = document.getElementById("limit-warning");
+
+var displayWarning = function(repo) {
+    limitWarningEl.textContent = "To see more than 30 issues, visit ";
+    var linkEl = document.createElement('a');
+    linkEl.textContent = "See More Issues on GitHub.com";
+    linkEl.setAttribute("href", "https://github.com/" + repo + "/issues");
+    linkEl.setAttribute("target", "_blank");
+
+    limitWarningEl.appendChild(linkEl);
+};
 
 var displayIssues = function(issues) {
     if (issues.length === 0) {
@@ -34,6 +45,11 @@ var getRepoIssues = function(repo) {
         if (response.ok) {
             response.json().then(function(data) {
                 displayIssues(data);
+
+                //checking for multiple pages of issues (more than 30)
+                if (response.headers.get('Link')) {
+                    displayWarning(repo);
+                }
             });
         }
         else {
@@ -42,4 +58,4 @@ var getRepoIssues = function(repo) {
     });
 };
 
-getRepoIssues("agoetz4407/code-quiz");
+getRepoIssues("angular/angular");
