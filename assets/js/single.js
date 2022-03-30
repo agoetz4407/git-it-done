@@ -1,5 +1,18 @@
 var issueContainerEl = document.getElementById("issue-container");
 var limitWarningEl = document.getElementById("limit-warning");
+var repoNameEl = document.getElementById("repo-name");
+
+var getRepoName = function() {
+    var queryString = document.location.search;
+    var repoName = queryString.split("=")[1];
+    if (repoName) {
+        repoNameEl.textContent = repoName;
+        getRepoIssues(repoName);
+    }
+    else {
+        document.location.replace("./index.html");
+    }
+};
 
 var displayWarning = function(repo) {
     limitWarningEl.textContent = "To see more than 30 issues, visit ";
@@ -53,9 +66,10 @@ var getRepoIssues = function(repo) {
             });
         }
         else {
-            alert("There was a problem with your request!");
+            document.location.replace("./index.html");
         }
     });
 };
 
-getRepoIssues("angular/angular");
+
+getRepoName();
